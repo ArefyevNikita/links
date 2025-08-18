@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2022",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@/domain/*": ["src/domain/*"],
+      "@/application/*": ["src/application/*"],
+      "@/infrastructure/*": ["src/infrastructure/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

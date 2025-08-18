@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: url-shortener-db
+    environment:
+      POSTGRES_DB: url_shortener
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d url_shortener"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - url-shortener-network
+
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    container_name: url-shortener-api
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      BASE_URL: http://localhost:3000
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: url_shortener
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/url_shortener
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3001/links || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - url-shortener-network
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    container_name: url-shortener-web
+    ports:
+      - "3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - url-shortener-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  url-shortener-network:
+    driver: bridge
