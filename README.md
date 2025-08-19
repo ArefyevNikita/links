@@ -53,7 +53,7 @@
 ```bash
 # Клонируем репозиторий
 git clone <repository-url>
-cd url-shortener
+cd links
 
 # Запускаем все сервисы
 docker-compose up -d
