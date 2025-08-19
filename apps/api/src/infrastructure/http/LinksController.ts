@@ -158,4 +158,14 @@ export class LinksController {
       );
     }
   }
+
+  @Get('health')
+  @ApiOperation({ summary: 'Health check endpoint' })
+  @ApiResponse({
+    status: 200,
+    description: 'Service is healthy',
+  })
+  public health(): { status: string } {
+    return { status: 'ok' };
+  }
 }

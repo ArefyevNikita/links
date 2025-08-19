@@ -15,7 +15,7 @@ export class ListLinksDto {
   @IsInt({ message: 'limit must be an integer' })
   @Min(1, { message: 'limit must be at least 1' })
   @Max(100, { message: 'limit must be at most 100' })
-  @Transform(({ value }) => parseInt(value as string) || 10)
+  @Transform(({ value }) => value === undefined || value === '' ? 10 : parseInt(value as string) || 10)
   limit: number = 10;
 
   @ApiPropertyOptional({
@@ -28,6 +28,6 @@ export class ListLinksDto {
   @Type(() => Number)
   @IsInt({ message: 'offset must be an integer' })
   @Min(0, { message: 'offset must be non-negative' })
-  @Transform(({ value }) => parseInt(value as string) || 0)
+  @Transform(({ value }) => value === undefined || value === '' ? 0 : parseInt(value as string) || 0)
   offset: number = 0;
 }
