@@ -45,7 +45,11 @@ export function CreateLinkForm(): JSX.Element {
     };
 
     if (data.expiresAt) {
-      request.expiresAt = new Date(data.expiresAt).toISOString();
+      const date = new Date(data.expiresAt);
+      
+      if (!isNaN(date.getTime())) {
+        request.expiresAt = date.toISOString();
+      }
     }
 
     createMutation.mutate(request);
@@ -117,6 +121,11 @@ export function CreateLinkForm(): JSX.Element {
               if (!value) return true;
               
               const expirationDate = new Date(value);
+              
+              if (isNaN(expirationDate.getTime())) {
+                return 'Введите корректную дату';
+              }
+              
               if (expirationDate <= new Date()) {
                 return 'Дата истечения должна быть в будущем';
               }
