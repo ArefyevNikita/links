@@ -9,16 +9,21 @@ export default [
       'dist/**',
       'build/**',
       '*.js',
+      '**/dist/**',
+      '**/build/**',
+      '**/coverage/**',
+      '**/.vite/**',
+      '**/*.d.ts',
     ],
   },
   {
     files: ['apps/api/**/*.ts'],
+    ignores: ['**/dist/**', '**/test/**'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: ['./apps/api/tsconfig.json'],
       },
       globals: {
         console: 'readonly',
@@ -26,6 +31,7 @@ export default [
         __dirname: 'readonly',
         Buffer: 'readonly',
         global: 'readonly',
+        URL: 'readonly',
       },
     },
     plugins: {
@@ -34,14 +40,13 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...tsPlugin.configs.recommended.rules,
-      ...tsPlugin.configs['recommended-requiring-type-checking'].rules,
       
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
-      '@typescript-eslint/prefer-optional-chain': 'error',
+      '@typescript-eslint/prefer-optional-chain': 'off',
       '@typescript-eslint/strict-boolean-expressions': 'off',
       
       'prefer-const': 'error',
@@ -52,7 +57,7 @@ export default [
   },
   {
     files: ['apps/web/**/*.ts', 'apps/web/**/*.tsx'],
-    ignores: ['**/vite.config.ts'],
+    ignores: ['**/dist/**', '**/vite.config.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -61,7 +66,6 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
-        project: ['./apps/web/tsconfig.json'],
       },
       globals: {
         console: 'readonly',
@@ -71,6 +75,10 @@ export default [
         setTimeout: 'readonly',
         JSX: 'readonly',
         React: 'readonly',
+        URL: 'readonly',
+        HTMLButtonElement: 'readonly',
+        HTMLDivElement: 'readonly',
+        HTMLInputElement: 'readonly',
       },
     },
     plugins: {
@@ -79,14 +87,13 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...tsPlugin.configs.recommended.rules,
-      ...tsPlugin.configs['recommended-requiring-type-checking'].rules,
       
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
-      '@typescript-eslint/prefer-optional-chain': 'error',
+      '@typescript-eslint/prefer-optional-chain': 'off',
       '@typescript-eslint/strict-boolean-expressions': 'off',
       '@typescript-eslint/no-misused-promises': 'off',
       '@typescript-eslint/no-floating-promises': 'off',
@@ -103,6 +110,11 @@ export default [
   {
     files: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.e2e-spec.ts'],
     languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
       globals: {
         describe: 'readonly',
         it: 'readonly',

@@ -12,9 +12,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d url_shortener"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 3s
+      timeout: 2s
+      retries: 3
+      start_period: 5s
     networks:
       - url-shortener-network
 
@@ -22,6 +23,10 @@ services:
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
+      cache_from:
+        - node:20-bookworm-slim
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     container_name: url-shortener-api
     environment:
       NODE_ENV: production
@@ -40,9 +45,10 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3001/links || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
     networks:
       - url-shortener-network
     restart: unless-stopped
@@ -51,6 +57,11 @@ services:
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
+      cache_from:
+        - node:20-bookworm-slim
+        - nginx:alpine
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     container_name: url-shortener-web
     ports:
       - "3000:80"
@@ -59,9 +70,10 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:80/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 5s
     networks:
       - url-shortener-network
     restart: unless-stopped
